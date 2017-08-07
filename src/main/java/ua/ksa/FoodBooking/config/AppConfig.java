@@ -28,6 +28,7 @@ import javax.sql.DataSource;
 @EnableJpaRepositories
 @EnableJpaAuditing
 @EnableTransactionManagement
+@Import({SecurityConfiguration.class})
 @ComponentScan("ua.ksa")
 @PropertySource("classpath:application.properties")
 public class AppConfig {
