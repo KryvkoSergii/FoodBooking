@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import ua.ksa.FoodBooking.core.dao.PersistentTokenCacheRepository;
 import ua.ksa.FoodBooking.core.model.PersistentToken;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -24,7 +26,8 @@ public class TokenRepositoryImpl implements PersistentTokenRepository {
 
     @Override
     public void createNewToken(PersistentRememberMeToken token) {
-        logger.info("saved " + repository.save(PersistentToken.buildFromPersistentRememberMeToken(token)));
+        PersistentToken persistentToken = repository.save(PersistentToken.buildFromPersistentRememberMeToken(token));
+        logger.info("saved " + persistentToken);
     }
 
     @Override
@@ -32,16 +35,20 @@ public class TokenRepositoryImpl implements PersistentTokenRepository {
         PersistentToken persistentToken = repository.findOne(series);
         persistentToken
                 .tokenValue(tokenValue)
-                .date(lastUsed.)
+                .date(lastUsed.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        repository.save(persistentToken);
+        logger.info("updated to " + persistentToken);
     }
 
     @Override
     public PersistentRememberMeToken getTokenForSeries(String seriesId) {
-        return null;
+        PersistentToken persistentToken = repository.findOne(seriesId);
+        return persistentToken != null ? PersistentToken.buildToPersistentRememberMeToken(persistentToken) : null;
     }
 
     @Override
     public void removeUserTokens(String username) {
-
+        repository.removeByName(username);
+        logger.info("removed for " + username);
     }
 }

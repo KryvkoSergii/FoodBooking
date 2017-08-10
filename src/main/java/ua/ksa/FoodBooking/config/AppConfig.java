@@ -15,13 +15,20 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 /**
  * Created by ksa on 06.08.17.
+ * http://websystique.com/springmvc/spring-mvc-4-and-spring-security-4-integration-example/
  */
 @Configuration
 @EnableWebMvc
@@ -31,7 +38,7 @@ import javax.sql.DataSource;
 @Import({SecurityConfiguration.class})
 @ComponentScan("ua.ksa")
 @PropertySource("classpath:application.properties")
-public class AppConfig {
+public class AppConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private Environment env;
 
@@ -71,5 +78,26 @@ public class AppConfig {
         return new JpaTransactionManager(emf);
     }
 
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setMaxUploadSizePerFile(100000000);
+        resolver.setMaxInMemorySize(100000000);
+        resolver.setDefaultEncoding("utf8");
+        return resolver;
+    }
 
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setViewClass(JstlView.class);
+        viewResolver.setPrefix("/WEB-INF/views/");
+        viewResolver.setSuffix(".jsp");
+        registry.viewResolver(viewResolver);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+    }
 }

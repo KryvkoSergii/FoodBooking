@@ -75,6 +75,13 @@ public class PersistentToken implements Serializable {
                 .tokenValue(token.getTokenValue());
     }
 
+    public static PersistentRememberMeToken buildToPersistentRememberMeToken(PersistentToken persistentToken) {
+        return new PersistentRememberMeToken(persistentToken.getUsername(),
+                persistentToken.getSeries(),
+                persistentToken.getTokenValue(),
+                Date.from(persistentToken.getDate().atZone(ZoneId.systemDefault()).toInstant()));
+    }
+
     public PersistentToken series(String series) {
         this.series = series;
         return this;
