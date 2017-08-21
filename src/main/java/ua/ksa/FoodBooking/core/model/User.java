@@ -8,9 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by ksa on 06.08.17.
@@ -35,12 +33,12 @@ public class User extends BaseEntity implements UserDetails {
     private LocalDateTime lastModifiedDate;
     @Column(name = "ROLE")
     @Enumerated(EnumType.STRING)
-    private Set<Roles> roles = new HashSet<>();
+    private Roles roles;
 
     public User() {
     }
 
-    public User(String login, String lname, String fname, String password, Set<Roles> roles) {
+    public User(String login, String lname, String fname, String password, Roles roles) {
         this.login = login;
         this.lname = lname;
         this.fname = fname;
@@ -50,7 +48,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return Arrays.asList(roles);
     }
 
     @Override

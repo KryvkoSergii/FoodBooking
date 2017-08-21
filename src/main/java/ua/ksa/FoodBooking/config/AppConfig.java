@@ -32,7 +32,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableWebMvc
-@EnableJpaRepositories
+@EnableJpaRepositories(basePackages = "ua.ksa")
 @EnableJpaAuditing
 @EnableTransactionManagement
 @Import({SecurityConfiguration.class})

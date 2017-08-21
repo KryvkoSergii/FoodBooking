@@ -1,5 +1,6 @@
 package ua.ksa.FoodBooking.core.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,11 +15,14 @@ import ua.ksa.FoodBooking.core.dao.UserRepository;
 @Component
 @Scope
 public class UserDetailsServiceImpl implements UserDetailsService {
+    @Autowired
     private UserRepository repository;
 
-    public UserDetailsServiceImpl(UserRepository repository) {
-        this.repository = repository;
+    public UserDetailsServiceImpl() {
     }
+    //    public UserDetailsServiceImpl(UserRepository repository) {
+//        this.repository = repository;
+//    }
 
     @Override
     @Transactional(readOnly=true)
